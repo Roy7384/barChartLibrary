@@ -1,0 +1,1 @@
+## barChartLibrary for lighthouse labs prep module stretch project
