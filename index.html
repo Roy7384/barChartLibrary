@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,15 +12,58 @@
 </head>
 
 <body>
-  <p id="demo"></p>
+  <h1>Bar Chart Generator Demo</h1>
+  <div id='functionSignature'>
+    <h3 style="margin-top: 0;">Generator function:</h3>
+    <code>
+      drawBarChart(data, options, element)
+    </code>
+  </div>
+
+  <div class='demoInfo'>
+    <h3>Demo 1: single values bar chart</h3>
+    <div>
+      <p>Parameters used in this demo</p>
+      <div class='demoParameters'>
+        <div class='data'>
+          <p>data = { <br>
+          label1: 40, <br>
+          label2: 30, <br>
+          label3: 44, <br>
+          label4: 25, <br>
+          label5: 40, <br>
+          label6: 38}
+          </p>
+        </div>
+        <div class="options">
+          <p style="margin-bottom: 0">
+            options = {
+            <p class='optionsInput'>
+            title:               <input type='text' value='chart title'>, <br>
+            titleFontSize:       <input type='text' value='1.5rem'>,<br>
+            titleColor:          <input type='text' value='slategray'>,<br>
+            yAxisTickUnit:       <input type='text' value='5'>,<br>
+            yAxisLabelFontSize:  <input type='text' value= '0.8rem'>,<br>
+            yAxisLabelFontColor: <input type='text' value='darkslateblue'>,<br>
+            valuePositionInBar:  <input type='text' value='center'>,<br>
+            barSpacing:          <input type='text' value= '1rem'>,<br>
+            barColor:            <input type='text' value='gold'>,<br>
+            xAxisLabelFontSize:  <input type='text' value= '1rem'>,<br>
+            xAxisLabelFontColor: <input type='text' value='darkslateblue'>}
+          </p>
+        </p>
+        </div>
+        <div class='element'>
+          <p>element = {<br> '#targetElmA'}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="targetElmA"></div>
+
   
-  <button class="trigger">Open</button>
 
-  <section class="overlay">
-    <button class="trigger">Close</button>
-  </section>
-
-
-  
 </body>
+
 </html>
