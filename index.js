@@ -24,8 +24,8 @@ $(document).ready(function () {
       valuePositionInBar: $("input[value='center']").val(), // top, center or bottom
       barSpacing: $("input[value='1rem']").val(),
       barColor: $("input[value='gold']").val(),
-      xAxisLabelFontSize: $("input[value='1rem']").val(),
-      xAxisLabelFontColor: $("input[value='darkslateblue']").val()
+      xAxisLabelFontSize: $("input[value='0.9rem']").val(),
+      xAxisLabelFontColor: $("input[value='blue']").val()
     }
     return newOptions
   }
@@ -57,8 +57,6 @@ $(document).ready(function () {
     const ticksUnit = options.yAxisTickUnit
     const maxVal = findMaxVal(data) + Number(ticksUnit)
     const ticksCount = Math.ceil(findMaxVal(data) / ticksUnit)
-
-    console.log(maxVal)
 
     // add chart title
     insertTitle(options, targetPosition)
@@ -100,7 +98,7 @@ $(document).ready(function () {
 
   // function to insert chart title
   function insertTitle (option, elem) {
-    elem.prepend('<p id=\'title\'>chart title</p>')
+    elem.prepend(`<p id=\'title\'>${option.title}</p>`)
     $('#title').css({
       'margin-bottom': '0.6rem',
       display: 'flex',
@@ -172,7 +170,7 @@ $(document).ready(function () {
       height: '498px',
       'align-items': 'flex-end',
       gap: option.barSpacing,
-      'margin-bottom': '-1.5rem'
+      'margin-bottom': `-${option.xAxisLabelFontSize}`
     })
 
     // draw bars according to whether single value or multiple value
@@ -203,7 +201,8 @@ $(document).ready(function () {
     // style label and bars
     $('.label').css({
       display: 'flex',
-      height: '1.5rem',
+      height: option.xAxisLabelFontSize,
+      'font-size': option.xAxisLabelFontSize,
       'align-items': 'center',
       'justify-content': 'center',
       color: option.xAxisLabelFontColor
