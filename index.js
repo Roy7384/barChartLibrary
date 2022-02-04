@@ -79,4 +79,87 @@ $(document).ready(function () {
 
     generateBarAndLabel(data, options, ticksCount, ticksUnit)
   }
+
+  // function to find the max value from the object data
+  // in the case of stacked bar charts, find the maximum sum of all values in one bar
+  function findMaxVal (data) {
+    const valueArr = []
+    for (const key in data) {
+      if (typeof data[key] === 'object') {
+        let barSum = 0
+        for (let i = 0; i < data[key].length; i = i + 2) {
+          barSum += data[key][i]
+        }
+        valueArr.push(barSum)
+      } else {
+        valueArr.push(data[key])
+      }
+    }
+    return Math.max(...valueArr)
+  }
+
+  // function to insert chart title
+  function insertTitle (option, elem) {
+    elem.prepend('<p id=\'title\'>chart title</p>')
+    $('#title').css({
+      'margin-bottom': '0.6rem',
+      display: 'flex',
+      'justify-content': 'center',
+      'font-size': option.titleFontSize,
+      color: option.titleColor
+    })
+  }
+
+  // function to generate entire y axis
+  function generateY (id, option, ticksCount, ticksUnit) {
+    // generate yLabels
+    $(id).append("<div class='yLabels'></div>")
+    $('.yLabels').css({
+      display: 'flex',
+      'flex-direction': 'column',
+      'justify-content': 'space-evenly'
+    })
+    // generate yAxis
+    $(id).append("<div id='yAxis'></div>")
+    $('#yAxis').css({
+      display: 'flex',
+      'flex-direction': 'column',
+      width: '2px',
+      height: '500px',
+      'background-color': option.yAxisLabelFontColor,
+      'justify-content': 'space-evenly'
+    })
+    // add yLabel text and yAxis ticks
+    for (let i = 0; i < ticksCount; i++) {
+      $('.yLabels').prepend(`<div class='yLabel'>${ticksUnit * (i + 1)}</div>`)
+      $('#yAxis').prepend("<div class='ticks'></div>")
+    }
+    // style ticks
+    $('.ticks').css({
+      height: '2px',
+      width: '10px',
+      'background-color': option.yAxisLabelFontColor
+    })
+    // style label text
+    $('.yLabel').css({
+      'font-size': option.yAxisLabelFontSize,
+      color: option.yAxisLabelFontColor
+    })
+  }
+
+  // function to generate x axis
+  function generateX (id, option) {
+    $(id).append("<div id='graphContainer'></div>")
+    $('#graphContainer').css({
+      display: 'flex',
+      'flex-direction': 'column',
+      'justify-content': 'flex-end',
+      'flex-grow': '1'
+    })
+    $('#graphContainer').append('<div id=xAxis></div>')
+    $('#xAxis').css({
+      height: '2px',
+      'background-color': option.xAxisLabelFontColor
+    })
+  }
 })
