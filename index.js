@@ -162,4 +162,78 @@ $(document).ready(function () {
       'background-color': option.xAxisLabelFontColor
     })
   }
+
+  // function to add bars and labels
+  function generateBarAndLabel (data, option, ticksCount, ticksUnit) {
+    $('#graphContainer').prepend('<div id=barContainer></div>') // insert one more container just for bars
+    $('#barContainer').css({
+      display: 'flex',
+      padding: '0 1.5rem',
+      height: '498px',
+      'align-items': 'flex-end',
+      gap: option.barSpacing,
+      'margin-bottom': '-1.5rem'
+    })
+
+    // draw bars according to whether single value or multiple value
+    let i = 1
+    for (const key in data) {
+      if (typeof data[key] === 'object') {
+        $('#barContainer').append(`<div class='bars' id='bar${i}'></div>`)
+        for (let j = 0; j < data[key].length; j += 2) {
+          $(`#bar${i}`).append(`<div class='value' id='bar${i}subValue${j}'>${data[key][j]}</div>`)
+          $(`#bar${i}subValue${j}`).css({
+            'background-color': data[key][j + 1],
+            height: `${(500 - (500 / (ticksCount + 1))) * data[key][j] / ticksCount / ticksUnit}px`
+          })
+        }
+        $(`#bar${i}`).append(`<div class='label'>${key}</div>`)
+        i += 1
+      } else {
+        $('#barContainer').append(`<div class='bars' id='bar${i}'></div>`)
+        $(`#bar${i}`).append(`<div class='value' id='value${i}'>${data[key]}</div>`)
+        $(`#bar${i}`).append(`<div class='label'>${key}</div>`)
+        $(`#value${i}`).css({
+          'background-color': option.barColor,
+          height: `${(500 - (500 / (ticksCount + 1))) * data[key] / ticksCount / ticksUnit}px`
+        })
+        i += 1
+      }
+    }
+    // style label and bars
+    $('.label').css({
+      display: 'flex',
+      height: '1.5rem',
+      'align-items': 'center',
+      'justify-content': 'center',
+      color: option.xAxisLabelFontColor
+    })
+
+    $('.value').css({
+      display: 'flex',
+      'justify-content': 'center',
+      color: option.xAxisLabelFontColor
+    })
+
+    $('.bars').css({
+      'flex-grow': '1'
+    })
+
+    // options for value text inside bar
+    switch (option.valuePositionInBar) {
+      case 'top':
+        $('.value').css('align-items', 'flex-start')
+        break
+      case 'center':
+        $('.value').css('align-items', 'center')
+        break
+      case 'bottom':
+        $('.value').css('align-items', 'flex-end')
+        break
+    }
+
+    // make bars pop up from x axis
+    $('.value').hide()
+    $('.value').slideDown(1500)
+  }
 })
