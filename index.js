@@ -13,26 +13,39 @@ $(document).ready(function () {
   }
 
   // get values in the options input boxes at a specfic time
-  function updateOptions () {
+  function updateOptions (cl) {
     const newOptions = {
-      title: $("input[value='chart title']").val(),
-      titleFontSize: $("input[value='1.5rem']").val(),
-      titleColor: $("input[value='slategray']").val(),
-      yAxisTickUnit: $("input[value='5']").val(),
-      yAxisLabelFontSize: $("input[value='0.8rem']").val(),
-      yAxisLabelFontColor: $("input[value='darkslateblue']").val(),
-      valuePositionInBar: $("input[value='center']").val(), // top, center or bottom
-      barSpacing: $("input[value='1rem']").val(),
-      barColor: $("input[value='gold']").val(),
-      xAxisLabelFontSize: $("input[value='0.9rem']").val(),
-      xAxisLabelFontColor: $("input[value='blue']").val()
+      title: $(`input.${cl}[value='chart title']`).val(),
+      titleFontSize: $(`input.${cl}[value='1.5rem']`).val(),
+      titleColor: $(`input.${cl}[value='slategray']`).val(),
+      yAxisTickUnit: $(`input.${cl}[value='5']`).val(),
+      yAxisLabelFontSize: $(`input.${cl}[value='0.8rem']`).val(),
+      yAxisLabelFontColor: $(`input.${cl}[value='darkslateblue']`).val(),
+      valuePositionInBar: $(`input.${cl}[value='center']`).val(), // top, center or bottom
+      barSpacing: $(`input.${cl}[value='1rem']`).val(),
+      barColor: $(`input.${cl}[value='gold']`).val(),
+      xAxisLabelFontSize: $(`input.${cl}[value='0.9rem']`).val(),
+      xAxisLabelFontColor: $(`input.${cl}[value='blue']`).val()
     }
     return newOptions
   }
 
+  // sample data set for demo 2
+  const dataStack = {
+    label1: [40, 'seagreen', 24, 'lightgreen', 5, 'peachpuff'],
+    label2: [30, 'olivedrab', 18, 'gold'],
+    label3: [44, 'darkseagreen'],
+    label4: [25, 'darkviolet'],
+    label5: [40, 'brown', 25, 'teal'],
+    label6: [38, 'pink']
+  }
+
+  // container element for demo2 chart
+  const elementB = '#targetElmB'
+
   // 'generate' button updates the chart to adjustments of options
   $('#demo1').click(function () {
-    const options = updateOptions() // update options to whatever user put in the input boxes
+    const options = updateOptions('demo1') // update options to whatever user put in the input boxes
 
     $(elementA).empty() // empty the target element of previous chart
 
@@ -55,7 +68,6 @@ $(document).ready(function () {
 
     // find the max value from data for generating x and y axis
     const ticksUnit = options.yAxisTickUnit
-    const maxVal = findMaxVal(data) + Number(ticksUnit)
     const ticksCount = Math.ceil(findMaxVal(data) / ticksUnit)
 
     // add chart title
@@ -170,12 +182,14 @@ $(document).ready(function () {
       height: '498px',
       'align-items': 'flex-end',
       gap: option.barSpacing,
-      'margin-bottom': `-${option.xAxisLabelFontSize}`
+      'font-size': option.xAxisLabelFontSize,
+      'margin-bottom': '-1.5em'
     })
 
     // draw bars according to whether single value or multiple value
     let i = 1
     for (const key in data) {
+      // draw stacked bars
       if (typeof data[key] === 'object') {
         $('#barContainer').append(`<div class='bars' id='bar${i}'></div>`)
         for (let j = 0; j < data[key].length; j += 2) {
@@ -188,6 +202,7 @@ $(document).ready(function () {
         $(`#bar${i}`).append(`<div class='label'>${key}</div>`)
         i += 1
       } else {
+        // single value bars
         $('#barContainer').append(`<div class='bars' id='bar${i}'></div>`)
         $(`#bar${i}`).append(`<div class='value' id='value${i}'>${data[key]}</div>`)
         $(`#bar${i}`).append(`<div class='label'>${key}</div>`)
@@ -201,8 +216,8 @@ $(document).ready(function () {
     // style label and bars
     $('.label').css({
       display: 'flex',
-      height: option.xAxisLabelFontSize,
       'font-size': option.xAxisLabelFontSize,
+      height: '1.5em',
       'align-items': 'center',
       'justify-content': 'center',
       color: option.xAxisLabelFontColor
@@ -233,6 +248,6 @@ $(document).ready(function () {
 
     // make bars pop up from x axis
     $('.value').hide()
-    $('.value').slideDown(1500)
+    $('.value').slideDown(1000)
   }
 })
