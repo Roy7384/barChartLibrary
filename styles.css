@@ -7,6 +7,10 @@ body {
   margin: 2rem;
 }
 
+.demoInfo {
+  margin-top: 2rem;
+}
+
 div.data > p {
  margin: 0; 
 }

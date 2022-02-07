@@ -43,13 +43,22 @@ $(document).ready(function () {
   // container element for demo2 chart
   const elementB = '#targetElmB'
 
-  // 'generate' button updates the chart to adjustments of options
+  // 'generate' button updates the chart to adjustments of options for demo1
   $('#demo1').click(function () {
     const options = updateOptions('demo1') // update options to whatever user put in the input boxes
 
     $(elementA).empty() // empty the target element of previous chart
 
     drawBarChart(data, options, elementA) // run the main function
+  })
+
+  // 'generate' button updates the chart to adjustments of options for demo2
+  $('#demo2').click(function () {
+    const options = updateOptions('demo2') // update options to whatever user put in the input boxes
+
+    $(elementB).empty() // empty the target element of previous chart
+
+    drawBarChart(dataStack, options, elementB) // run the main function
   })
 
   // code for the actual function and sub functions
@@ -71,23 +80,23 @@ $(document).ready(function () {
     const ticksCount = Math.ceil(findMaxVal(data) / ticksUnit)
 
     // add chart title
-    insertTitle(options, targetPosition)
+    insertTitle(options, element)
 
     // insert a div container with id chart to hold all chart elements
     targetPosition.append("<div id='chart'></div>")
-    $('#chart').css({
+    $(element).find('#chart').css({
       display: 'flex',
       'padding-bottom': '2em',
       gap: 0
     })
 
     // generate the y axis
-    generateY('#chart', options, ticksCount, ticksUnit)
+    generateY('#chart', options, ticksCount, ticksUnit, element)
 
     // generate the x axis
-    generateX('#chart', options)
+    generateX('#chart', options, element)
 
-    generateBarAndLabel(data, options, ticksCount, ticksUnit)
+    generateBarAndLabel(data, options, ticksCount, ticksUnit, element)
   }
 
   // function to find the max value from the object data
@@ -110,8 +119,8 @@ $(document).ready(function () {
 
   // function to insert chart title
   function insertTitle (option, elem) {
-    elem.prepend(`<p id=\'title\'>${option.title}</p>`)
-    $('#title').css({
+    $(elem).prepend(`<p id=\'title\'>${option.title}</p>`)
+    $(elem).find('#title').css({
       'margin-bottom': '0.6rem',
       display: 'flex',
       'justify-content': 'center',
@@ -121,17 +130,17 @@ $(document).ready(function () {
   }
 
   // function to generate entire y axis
-  function generateY (id, option, ticksCount, ticksUnit) {
+  function generateY (id, option, ticksCount, ticksUnit, elem) {
     // generate yLabels
-    $(id).append("<div class='yLabels'></div>")
-    $('.yLabels').css({
+    $(elem).find(id).append("<div class='yLabels'></div>")
+    $(elem).find('.yLabels').css({
       display: 'flex',
       'flex-direction': 'column',
       'justify-content': 'space-evenly'
     })
     // generate yAxis
-    $(id).append("<div id='yAxis'></div>")
-    $('#yAxis').css({
+    $(elem).find(id).append("<div id='yAxis'></div>")
+    $(elem).find('#yAxis').css({
       display: 'flex',
       'flex-direction': 'column',
       width: '2px',
@@ -141,42 +150,42 @@ $(document).ready(function () {
     })
     // add yLabel text and yAxis ticks
     for (let i = 0; i < ticksCount; i++) {
-      $('.yLabels').prepend(`<div class='yLabel'>${ticksUnit * (i + 1)}</div>`)
-      $('#yAxis').prepend("<div class='ticks'></div>")
+      $(elem).find('.yLabels').prepend(`<div class='yLabel'>${ticksUnit * (i + 1)}</div>`)
+      $(elem).find('#yAxis').prepend("<div class='ticks'></div>")
     }
     // style ticks
-    $('.ticks').css({
+    $(elem).find('.ticks').css({
       height: '2px',
       width: '10px',
       'background-color': option.yAxisLabelFontColor
     })
     // style label text
-    $('.yLabel').css({
+    $(elem).find('.yLabel').css({
       'font-size': option.yAxisLabelFontSize,
       color: option.yAxisLabelFontColor
     })
   }
 
   // function to generate x axis
-  function generateX (id, option) {
-    $(id).append("<div id='graphContainer'></div>")
-    $('#graphContainer').css({
+  function generateX (id, option, elem) {
+    $(elem).find(id).append("<div id='graphContainer'></div>")
+    $(elem).find('#graphContainer').css({
       display: 'flex',
       'flex-direction': 'column',
       'justify-content': 'flex-end',
       'flex-grow': '1'
     })
-    $('#graphContainer').append('<div id=xAxis></div>')
-    $('#xAxis').css({
+    $(elem).find('#graphContainer').append('<div id=xAxis></div>')
+    $(elem).find('#xAxis').css({
       height: '2px',
       'background-color': option.xAxisLabelFontColor
     })
   }
 
   // function to add bars and labels
-  function generateBarAndLabel (data, option, ticksCount, ticksUnit) {
-    $('#graphContainer').prepend('<div id=barContainer></div>') // insert one more container just for bars
-    $('#barContainer').css({
+  function generateBarAndLabel (data, option, ticksCount, ticksUnit, elem) {
+    $(elem).find('#graphContainer').prepend('<div id=barContainer></div>') // insert one more container just for bars
+    $(elem).find('#barContainer').css({
       display: 'flex',
       padding: '0 1.5rem',
       height: '498px',
@@ -191,22 +200,22 @@ $(document).ready(function () {
     for (const key in data) {
       // draw stacked bars
       if (typeof data[key] === 'object') {
-        $('#barContainer').append(`<div class='bars' id='bar${i}'></div>`)
+        $(elem).find('#barContainer').append(`<div class='bars' id='bar${i}'></div>`)
         for (let j = 0; j < data[key].length; j += 2) {
-          $(`#bar${i}`).append(`<div class='value' id='bar${i}subValue${j}'>${data[key][j]}</div>`)
-          $(`#bar${i}subValue${j}`).css({
+          $(elem).find(`#bar${i}`).append(`<div class='value' id='bar${i}subValue${j}'>${data[key][j]}</div>`)
+          $(elem).find(`#bar${i}subValue${j}`).css({
             'background-color': data[key][j + 1],
             height: `${(500 - (500 / (ticksCount + 1))) * data[key][j] / ticksCount / ticksUnit}px`
           })
         }
-        $(`#bar${i}`).append(`<div class='label'>${key}</div>`)
+        $(elem).find(`#bar${i}`).append(`<div class='label'>${key}</div>`)
         i += 1
       } else {
         // single value bars
-        $('#barContainer').append(`<div class='bars' id='bar${i}'></div>`)
-        $(`#bar${i}`).append(`<div class='value' id='value${i}'>${data[key]}</div>`)
-        $(`#bar${i}`).append(`<div class='label'>${key}</div>`)
-        $(`#value${i}`).css({
+        $(elem).find('#barContainer').append(`<div class='bars' id='bar${i}'></div>`)
+        $(elem).find(`#bar${i}`).append(`<div class='value' id='value${i}'>${data[key]}</div>`)
+        $(elem).find(`#bar${i}`).append(`<div class='label'>${key}</div>`)
+        $(elem).find(`#value${i}`).css({
           'background-color': option.barColor,
           height: `${(500 - (500 / (ticksCount + 1))) * data[key] / ticksCount / ticksUnit}px`
         })
@@ -214,7 +223,7 @@ $(document).ready(function () {
       }
     }
     // style label and bars
-    $('.label').css({
+    $(elem).find('.label').css({
       display: 'flex',
       'font-size': option.xAxisLabelFontSize,
       height: '1.5em',
@@ -223,31 +232,31 @@ $(document).ready(function () {
       color: option.xAxisLabelFontColor
     })
 
-    $('.value').css({
+    $(elem).find('.value').css({
       display: 'flex',
       'justify-content': 'center',
       color: option.xAxisLabelFontColor
     })
 
-    $('.bars').css({
+    $(elem).find('.bars').css({
       'flex-grow': '1'
     })
 
     // options for value text inside bar
     switch (option.valuePositionInBar) {
       case 'top':
-        $('.value').css('align-items', 'flex-start')
+        $(elem).find('.value').css('align-items', 'flex-start')
         break
       case 'center':
-        $('.value').css('align-items', 'center')
+        $(elem).find('.value').css('align-items', 'center')
         break
       case 'bottom':
-        $('.value').css('align-items', 'flex-end')
+        $(elem).find('.value').css('align-items', 'flex-end')
         break
     }
 
     // make bars pop up from x axis
-    $('.value').hide()
-    $('.value').slideDown(1000)
+    $(elem).find('.value').hide()
+    $(elem).find('.value').slideDown(1000)
   }
 })
